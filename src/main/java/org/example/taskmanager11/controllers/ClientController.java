@@ -1,12 +1,10 @@
 package org.example.taskmanager11.controllers;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.taskmanager11.model.Client;
 import org.example.taskmanager11.services.ClientService;
 import org.example.taskmanager11.utils.Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -46,13 +44,22 @@ public class ClientController {
         if (clientService.checkClient(login, password)) {
             session.setAttribute("login", login);
             return "redirect:/";
-        } else
+        } else {
             return "redirect:/login";
+        }
     }
 
     @GetMapping("logout")
     public String logout(HttpSession session) {
         session.removeAttribute("login");
         return "redirect:/";
+    }
+
+    // 🔹 Новый метод смены пароля
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam Long clientId,
+                                 @RequestParam String newPassword) {
+        clientService.changePassword(clientId, newPassword);
+        return "Пароль изменён";
     }
 }

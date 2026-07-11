@@ -35,4 +35,17 @@ public class ClientService {
         String hash = Utils.passwordHash(client.getSalt(), password);
         return hash.equals(client.getPassword());
     }
+
+    // 🔹 Вынесенный метод
+    @Transactional
+    public void changePassword(Long clientId, String newPassword) {
+        Client client = clientRepository.findById(clientId).orElse(null);
+        if (client != null) {
+            client.setPassword(newPassword);
+            clientRepository.save(client);
+            System.out.println("✅ Пароль успешно изменён для клиента: " + client.getLogin());
+        } else {
+            System.out.println("❌ Клиент не найден.");
+        }
+    }
 }
